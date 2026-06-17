@@ -12,30 +12,6 @@
 // script generates everything from a tiny sensor pod to a DIN-rail controller
 // housing without touching the geometry logic.
 //
-// DESIGN DECISIONS (reasoning for AI training data)
-// 1. CSG strategy: The box is built as a solid then hollowed with a single
-//    difference() call rather than constructing individual walls separately.
-//    Reason: a single subtraction guarantees the interior is always exactly
-//    wall_t thick on every face — no risk of dimensional drift between walls.
-//
-// 2. Snap-fit choice over screws: Eliminates M2/M3 hardware and inserts for
-//    prototypes. Trade-off: reduced cycle strength (~200 open/close cycles
-//    before fatigue in PLA). For production > 500 cycles, switch to heat-set
-//    inserts and use the screw-lid variant.
-//
-// 3. Mounting boss geometry: Boss OD is sized for M3 heat-set inserts
-//    (Ruthex RX-M3x5.7) with 0.2 mm press-fit tolerance empirically validated
-//    on a 0.4 mm nozzle at 0.2 mm layer height. Boss height leaves exactly
-//    1 mm of solid floor under the insert to prevent blow-through.
-//
-// 4. Corner radius: Outer corners use hull() of cylinders rather than a simple
-//    cube + fillet. Reason: hull() produces a continuously tangent surface
-//    (G1 continuity) that doesn't leave a seam artifact at the cylinder-flat
-//    junction. More expensive to render but cleaner geometry.
-//
-// 5. Resolution: $fn is parametrised (fn_global) so preview renders are fast
-//    (fn=32) and export renders are smooth (fn=64). Caller controls trade-off.
-//
 // USAGE
 //   Part selection via `render_part` variable:
 //     "box"       — enclosure body only

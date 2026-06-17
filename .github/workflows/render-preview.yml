@@ -1,0 +1,37 @@
+name: Render OpenSCAD previews
+
+on:
+  push:
+    paths:
+      - '**/*.scad'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: sudo apt-get install -y openscad xvfb
+
+      - name: Render enclosure previews
+        run: |
+          mkdir -p 01-enclosures/renders
+          xvfb-run openscad --render \
+            --imgsize=800,600 \
+            --colorscheme=Tomorrow \
+            -o 01-enclosures/renders/assembly.png \
+            -D 'render_part="assembly"' \
+            01-enclosures/parametric-enclosure.scad
+          xvfb-run openscad --render \
+            --imgsize=800,600 \
+            --colorscheme=Tomorrow \
+            -o 01-enclosures/renders/section.png \
+            -D 'render_part="section"' \
+            01-enclosures/parametric-enclosure.scad
+
+      - name: Commit renders
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: auto-render OpenSCAD previews"
+          file_pattern: "**/*.png"

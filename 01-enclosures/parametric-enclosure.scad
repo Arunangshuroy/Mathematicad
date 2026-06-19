@@ -1,7 +1,7 @@
 // =============================================================================
 // PARAMETRIC ELECTRONICS ENCLOSURE WITH SNAP-FIT LID
 // =============================================================================
-// Author  : Arunangshu Das
+// Author  : Arunangshu Roy
 // Version : 1.0
 // License : CC BY 4.0
 //
